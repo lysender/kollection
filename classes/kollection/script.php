@@ -261,12 +261,12 @@ class Kollection_Script {
 	/**
 	 * Sets a script to focus on a form element
 	 *
-	 * @param   string		$script
+	 * @param   string		$field
 	 * @return  Kollection_Script
 	 */
-	public function set_focus_script($script)
+	public function set_focus_script($field)
 	{
-		$this->_focus_script = $script;
+		$this->_focus_script = $this->get_adapter()->focus($field);
 		
 		return $this;
 	}
