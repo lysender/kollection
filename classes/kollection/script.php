@@ -289,7 +289,7 @@ class Kollection_Script {
 	 * @uses    HTML::script
 	 * @return  string
 	 */
-	public function get_all_scripts()
+	public function render()
 	{
 		$contents = '';
 		$ret = '';
@@ -305,14 +305,6 @@ class Kollection_Script {
 			$ret .= HTML::script($file.$c)."\n";
 		}
 		
-		// Add focus script to ready scripts
-		$focus = $this->get_focus_script();
-		
-		if ($focus)
-		{
-			$this->add_ready_script($focus);
-		}
-		
 		// Generate global scripts
 		$global_scripts = $this->get_global_scripts();
 		
@@ -322,6 +314,14 @@ class Kollection_Script {
 		
 		// Generate ready scripts
 		$ready_scripts = $this->get_ready_scripts();
+		
+		// Add focus script to ready scripts
+		$focus = $this->get_focus_script();
+		
+		if ($focus)
+		{
+			$ready_scripts[] = $focus;
+		}
 		
 		if ( ! empty($ready_scripts))
 		{
@@ -340,5 +340,15 @@ class Kollection_Script {
 		$ret .= $js->generate_tag($contents);
 		
 		return $ret;
+	}
+	
+	/**
+	 * Script object converted to string renders itself
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		return $this->render();
 	}
 }

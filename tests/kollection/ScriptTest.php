@@ -317,7 +317,7 @@ class Kollection_ScriptTest extends Kohana_Unittest_TestCase {
 		$this->assertEquals($expected, $s->get_focus_script());
 	}
 	
-	public function all_script_provider()
+	public function render_provider()
 	{
 		return array(
 			// Complete with all script components
@@ -419,7 +419,7 @@ class Kollection_ScriptTest extends Kohana_Unittest_TestCase {
 	 * To prove that the tests pass, all inputs must exist on output
 	 * using the behavior only seen on Kollection_Script class.
 	 *
-	 * @dataProvider	all_script_provider
+	 * @dataProvider	render_provider
 	 * @param  array	$files
 	 * @param  string	$cache_buster
 	 * @param  array	$global
@@ -428,7 +428,7 @@ class Kollection_ScriptTest extends Kohana_Unittest_TestCase {
 	 * @param  string	$focus
 	 * @param  string	$expected
 	 */
-	public function test_get_all_scripts(array $files, $cache_buster, array $global, array $ready, array $deferred, $focus, $expected)
+	public function test_render(array $files, $cache_buster, array $global, array $ready, array $deferred, $focus, $expected)
 	{
 		$s = new Kollection_Script($this->_script_adapter);
 		
@@ -468,6 +468,7 @@ class Kollection_ScriptTest extends Kohana_Unittest_TestCase {
 			$s->set_focus_script($focus);
 		}
 		
-		$this->assertEquals($expected, $s->get_all_scripts());
+		$this->assertEquals($expected, $s->render());
+		$this->assertEquals($expected, (string) $s);
 	}
 }
