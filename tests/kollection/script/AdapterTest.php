@@ -148,6 +148,91 @@ class Kollection_Script_AdapterTest extends Kohana_Unittest_TestCase {
 		$this->assertEquals($expected, $a->js_var($name, $value));
 	}
 	
+	public function field_value_provider()
+	{
+		$some_list = array('foo', 'bar', 'baz');
+		
+		$o = new stdClass;
+		$o->name = 'Lysender';
+		$o->email = 'lolcat@zend.com';
+		
+		return array(
+			array(
+				'a',
+				true,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+			array(
+				'name',
+				'Lysender',
+				'var field_name = document.getElementById("name");'."\n"
+					."if (field_name) {\n"
+						.'field_name.value = "Lysender";'."\n"
+					."}\n",
+				NULL
+			),
+			array(
+				'total',
+				0,
+				'var field_total = document.getElementById("total");'."\n"
+					."if (field_total) {\n"
+						.'field_total.value = "0";'."\n"
+					."}\n",
+				NULL
+			),
+			array(
+				'total',
+				98,
+				'var field_total = document.getElementById("total");'."\n"
+					."if (field_total) {\n"
+						.'field_total.value = "98";'."\n"
+					."}\n",
+				NULL
+			),
+			array(
+				'discount',
+				20.50,
+				'var field_discount = document.getElementById("discount");'."\n"
+					."if (field_discount) {\n"
+						.'field_discount.value = "20.5";'."\n"
+					."}\n",
+				NULL
+			), // Zero stripped off
+			array(
+				'someList',
+				$some_list,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+			array(
+				'someObj',
+				$o,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider	field_value_provider
+	 * @param   string	$field
+	 * @param   mixed	$value
+	 * @param   string	$expected
+	 * @param   string	$exception
+	 * @return  void
+	 */
+	public function test_field_value($field, $value, $expected, $exception)
+	{
+		if ($exception !== NULL)
+		{
+			$this->setExpectedException($exception);
+		}
+		
+		$a = new Kollection_Script_Adapter;
+		$this->assertEquals($expected, $a->field_value($field, $value));
+	}
+	
 	public function test_highlight_error()
 	{
 		$a = new Kollection_Script_Adapter;

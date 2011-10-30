@@ -58,4 +58,29 @@ class Kollection_Script_Jquery extends Kollection_Script_Adapter {
 		
 		return $s;
 	}
+	
+	/**
+	 * Sets the form element value using jQuery syntax
+	 *
+	 * @param   string	$element_id
+	 * @param   string	$value
+	 * @return  string
+	 */
+	public function field_value($element_id, $value)
+	{
+		// Only strings and numbers can be set to form fields
+		// Numbers and floats will be converted to string
+		if (is_object($value) || is_array($value) || is_bool($value))
+		{
+			throw new Kollection_Script_Exception('Values accepted are only strings and integers/floats.');
+		}
+		
+		$s = '$("#%s").val("%v");'."\n";
+		
+		return str_replace(
+			array('%s', '%v'),
+			array($element_id, (string) $value),
+			$s
+		);
+	}
 }

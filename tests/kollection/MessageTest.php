@@ -5,5 +5,8 @@
  */
 class Kollection_MessageTest extends Kohana_Unittest_TestCase {
 	
-	
+	public function test_object()
+	{
+		
+	}
 }

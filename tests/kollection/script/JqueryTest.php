@@ -98,4 +98,77 @@ class Kollection_Script_JqueryTest extends Kohana_Unittest_TestCase {
 		$a = new Kollection_Script_Jquery;
 		$this->assertEquals($expected, $a->deferred($input));
 	}
+	
+	public function field_value_provider()
+	{
+		$some_list = array('foo', 'bar', 'baz');
+		
+		$o = new stdClass;
+		$o->name = 'Lysender';
+		$o->email = 'lolcat@zend.com';
+		
+		return array(
+			array(
+				'a',
+				true,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+			array(
+				'name',
+				'Lysender',
+				'$("#name").val("Lysender");'."\n",
+				NULL
+			),
+			array(
+				'total',
+				0,
+				'$("#total").val("0");'."\n",
+				NULL
+			),
+			array(
+				'total',
+				98,
+				'$("#total").val("98");'."\n",
+				NULL
+			),
+			array(
+				'discount',
+				20.50,
+				'$("#discount").val("20.5");'."\n",
+				NULL
+			), // Zero stripped off
+			array(
+				'someList',
+				$some_list,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+			array(
+				'someObj',
+				$o,
+				NULL,
+				'Kollection_Script_Exception'
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider	field_value_provider
+	 * @param   string	$field
+	 * @param   mixed	$value
+	 * @param   string	$expected
+	 * @param   string	$exception
+	 * @return  void
+	 */
+	public function test_field_value($field, $value, $expected, $exception)
+	{
+		if ($exception !== NULL)
+		{
+			$this->setExpectedException($exception);
+		}
+		
+		$a = new Kollection_Script_Jquery;
+		$this->assertEquals($expected, $a->field_value($field, $value));
+	}
 }
