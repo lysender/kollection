@@ -57,9 +57,9 @@ class Kollection_Message {
 	/**
 	 * Messages
 	 *
-	 * @var  array
+	 * @var  mixed
 	 */
-	protected $_messages = array();
+	protected $_messages;
 	
 	/**
 	 * View helper that handles how the message is rendered
@@ -188,6 +188,11 @@ class Kollection_Message {
 	{
 		if ($this->_view === NULL)
 		{
+			if ($this->get_display() === NULL)
+			{
+				throw new Kollection_Message_Exception('No display type being set yet');
+			}
+
 			// Set the default view
 			$this->_view = View::factory('kollection/message/'.$this->get_display());
 		}
@@ -243,9 +248,30 @@ class Kollection_Message {
 	{
 		$view = $this->get_view();
 		
+		// Type must be set first
+		if ($this->_type === NULL)
+		{
+			throw new Kollection_Message_Exception('No error type set yet');
+		}
+
+		// There must be messages
+		if (empty($this->_messages))
+		{
+			throw new Kollection_Message_Exception('No messages set yet');
+		}
+
+		// For list display type, title is required
+		if ($this->_display === self::DISPLAY_LIST)
+		{
+			if ($this->_title === NULL)
+			{
+				throw new Kollection_Message_Exception('Title is required for list type messages');
+			}
+		}
+
 		$view->set('title', $this->get_title())
-			->set('messages', $this->get_messages())
-			->set('type', $this->get_type());
+			->set('messages', $this->_messages)
+			->set('type', $this->_type);
 		
 		return $view->render();
 	}
